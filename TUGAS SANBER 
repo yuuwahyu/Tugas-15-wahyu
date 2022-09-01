@@ -1,0 +1,62 @@
+import unittest
+import time
+from selenium import webdriver 
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+
+class Testdaftar(unittest.TestCase):  # TEST SCENARIO
+
+    def setUp(self): 
+        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+
+    def test_a_success_daftar(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("http://barru.pythonanywhere.com/daftar") # buka situs
+        time.sleep(1)
+        browser.find_element(By.ID,"signUp").click()
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div/div[1]/form/input[1]").send_keys("wahyuyu") # isi nama
+        time.sleep(1)
+        browser.find_element(By.CSS_SELECTOR,"input#email_register").send_keys("cok@gmail.com") # jika email sudah terdaftar maka tidak bisa 
+        time.sleep(1) #jika ingin run di ganti emailnya dengan yg belum terdaftar
+        browser.find_element(By.CSS_SELECTOR,"input#password_register").send_keys("yonkjaya69") #isi password
+        time.sleep(1)
+        browser.find_element(By.ID,"signup_register").click() # klik tombol sign up
+        time.sleep(1)
+
+        # validasi
+        text_atas = browser.find_element(By.ID,"swal2-title").text
+        text_bawah = browser.find_element(By.ID,"swal2-content").text
+
+        self.assertIn('berhasil', text_atas)
+        self.assertEqual(text_bawah, 'created user!')
+
+    def test_b_failed_daftar(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("http://barru.pythonanywhere.com/daftar") # buka situs
+        time.sleep(1)
+        browser.find_element(By.ID,"signUp").click()
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div/div[1]/form/input[1]").send_keys("wahyuyu") # isi nama
+        time.sleep(1)
+        browser.find_element(By.CSS_SELECTOR,"input#email_register").send_keys("cok@gmail.com") # jika email sudah terdaftar maka tidak bisa 
+        time.sleep(1) #jika ingin run di ganti emailnya dengan yg belum terdaftar
+        browser.find_element(By.CSS_SELECTOR,"input#password_register").send_keys("yonkjaya69") #isi password
+        time.sleep(1)
+        browser.find_element(By.ID,"signup_register").click() # klik tombol sign up
+        time.sleep(1)
+
+        # validasi
+        text_atas = browser.find_element(By.ID,"swal2-title").text
+        text_bawah = browser.find_element(By.ID,"swal2-content").text
+
+        self.assertIn('Oops...', text_atas)
+        self.assertEqual(text_bawah, 'Gagal Register!')
+
+    def tearDown(self): 
+        self.browser.close()
+
+if __name__ == "__main__": 
+    unittest.main()
